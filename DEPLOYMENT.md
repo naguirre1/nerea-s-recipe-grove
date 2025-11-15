@@ -76,9 +76,7 @@ To add a custom image for a recipe:
 ## 🔗 Your Site URL
 
 After deployment, your site will be available at:
-`https://yourusername.github.io/knowledge-garden-nerea/`
-
-Replace `yourusername` with your GitHub username.
+`https://naguirre1.github.io/nerea-s-recipe-grove/`
 
 ## 📱 Local Development
 
