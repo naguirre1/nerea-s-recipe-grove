@@ -1,9 +1,8 @@
 import { useParams, Link } from "react-router-dom";
-import { recipes } from "@/data/recipes";
+import { recipes, DEFAULT_RECIPE_IMAGE } from "@/data/recipes";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ChefHat, Clock, Users } from "lucide-react";
-import defaultRecipeImage from "@/assets/default-recipe.jpg";
 
 const RecipeDetail = () => {
   const { id } = useParams();
@@ -22,14 +21,20 @@ const RecipeDetail = () => {
     );
   }
 
+  // Usar recipe.image directamente (ya es una variable procesada por Vite)
+  const imageUrl = recipe.image || DEFAULT_RECIPE_IMAGE;
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <div className="relative h-[60vh] overflow-hidden">
         <img
-          src={recipe.image || defaultRecipeImage}
+          src={imageUrl}
           alt={recipe.title}
           className="h-full w-full object-cover"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = DEFAULT_RECIPE_IMAGE;
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/40 to-transparent" />
         <div className="absolute inset-0 flex items-end">
