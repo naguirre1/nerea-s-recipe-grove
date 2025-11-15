@@ -6,8 +6,11 @@ export interface Recipe {
   tags: string[];
   ingredients: string[];
   steps: string[];
-  image: string;
+  image?: string; // Optional - will use default if not provided
 }
+
+// Default image for recipes without a specific image
+export const DEFAULT_RECIPE_IMAGE = "/src/assets/default-recipe.jpg";
 
 export const recipes: Recipe[] = [
   {

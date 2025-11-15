@@ -3,6 +3,7 @@ import { recipes } from "@/data/recipes";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ChefHat, Clock, Users } from "lucide-react";
+import defaultRecipeImage from "@/assets/default-recipe.jpg";
 
 const RecipeDetail = () => {
   const { id } = useParams();
@@ -26,7 +27,7 @@ const RecipeDetail = () => {
       {/* Hero Section */}
       <div className="relative h-[60vh] overflow-hidden">
         <img
-          src={recipe.image}
+          src={recipe.image || defaultRecipeImage}
           alt={recipe.title}
           className="h-full w-full object-cover"
         />
