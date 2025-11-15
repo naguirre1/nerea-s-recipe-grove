@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Recipe } from "@/data/recipes";
+import { Recipe, DEFAULT_RECIPE_IMAGE } from "@/data/recipes";
+import defaultRecipeImage from "@/assets/default-recipe.jpg";
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -13,7 +14,7 @@ export const RecipeCard = ({ recipe }: RecipeCardProps) => {
       <Card className="group overflow-hidden transition-all duration-300 hover:shadow-[var(--shadow-card)] hover:-translate-y-1 bg-card border-border">
         <div className="relative aspect-square overflow-hidden bg-muted">
           <img
-            src={recipe.image}
+            src={recipe.image || defaultRecipeImage}
             alt={recipe.title}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
