@@ -21,18 +21,16 @@ const RecipeDetail = () => {
     );
   }
 
-  // Usar recipe.image directamente (ya es una variable procesada por Vite)
-  const imageUrl = recipe.image || DEFAULT_RECIPE_IMAGE;
-
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <div className="relative h-[60vh] overflow-hidden">
         <img
-          src={imageUrl}
+          src={recipe.image}
           alt={recipe.title}
           className="h-full w-full object-cover"
           onError={(e) => {
+            console.warn(`Image failed to load for ${recipe.id}`);
             (e.target as HTMLImageElement).src = DEFAULT_RECIPE_IMAGE;
           }}
         />
