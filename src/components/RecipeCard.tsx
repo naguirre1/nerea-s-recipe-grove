@@ -8,6 +8,15 @@ interface RecipeCardProps {
 }
 
 export const RecipeCard = ({ recipe }: RecipeCardProps) => {
+  console.log('🔍 RecipeCard debug:', {
+    id: recipe.id,
+    title: recipe.title,
+    image: recipe.image,
+    imageType: typeof recipe.image,
+    imageExists: !!recipe.image,
+    allKeys: Object.keys(recipe)
+  });
+
   return (
     <Link to={`/recipe/${recipe.id}`}>
       <Card className="group overflow-hidden transition-all duration-300 hover:shadow-[var(--shadow-card)] hover:-translate-y-1 bg-card border-border">
