@@ -10,7 +10,7 @@ export interface Recipe {
   tags: string[];
   ingredients: string[];
   steps: string[];
-  image: string; // Requerido, no opcional
+  image: string;
 }
 
 export const DEFAULT_RECIPE_IMAGE = defaultRecipeImg;
