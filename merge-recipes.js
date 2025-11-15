@@ -4,6 +4,7 @@ import path from 'path';
 function mergeRecipes() {
   const recipesDir = './recipes-external/🌳 Forest/🕷️ Recipes';
   const recipesFile = './src/data/recipes.ts';
+  const assetsDir = './src/assets';
   
   if (!fs.existsSync(recipesFile)) {
     console.warn('⚠️ recipes.ts not found');
@@ -33,6 +34,13 @@ function mergeRecipes() {
   const newRecipes = [];
   const newImports = new Map();
   
+  // Listar archivos de imagen disponibles
+  const availableImages = fs.existsSync(assetsDir)
+    ? fs.readdirSync(assetsDir).filter(f => /\.(jpg|jpeg|png|gif)$/i.test(f))
+    : [];
+  
+  console.log('📁 Available images:', availableImages);
+  
   if (fs.existsSync(recipesDir)) {
     fs.readdirSync(recipesDir)
       .filter(file => file.endsWith('.json'))
@@ -42,7 +50,6 @@ function mergeRecipes() {
           const recipe = JSON.parse(jsonContent);
           
           // Generar nombre de variable para el import
-          // Ej: crema-calabaza -> cremaCalabraza
           const varName = recipe.id
             .split('-')
             .map((word, index) => 
@@ -52,15 +59,19 @@ function mergeRecipes() {
             )
             .join('');
           
-          // Crear ruta de imagen esperada
-          const imagePath = `../assets/${recipe.id}.jpg`;
+          // Buscar imagen por ID
+          const matchingImage = availableImages.find(img => 
+            img.toLowerCase().includes(recipe.id.toLowerCase())
+          );
           
-          // Guardar import si la imagen existe en assets
-          if (fs.existsSync(`./src/assets/${recipe.id}.jpg`)) {
+          if (matchingImage) {
+            const imagePath = `../assets/${matchingImage}`;
             newImports.set(imagePath, varName);
             recipe.imageVar = varName;
+            console.log(`✅ Found image for ${recipe.id}: ${matchingImage}`);
           } else {
             console.warn(`⚠️ Image not found for recipe: ${recipe.id}`);
+            console.warn(`   Available images: ${availableImages.join(', ')}`);
             recipe.imageVar = null;
           }
           
