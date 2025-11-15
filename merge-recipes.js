@@ -1,6 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 
+// Mapeo explícito de IDs de recetas a nombres de imagen
+const imageMapping = {
+  '🎃-crema-de-calabaza': 'pumpkin-soup.jpg',
+  '🥣-pisto': 'pisto-dish.jpg'
+};
+
 function mergeRecipes() {
   const recipesDir = './recipes-external/🌳 Forest/🕷️ Recipes';
   const recipesFile = './src/data/recipes.ts';
@@ -34,13 +40,6 @@ function mergeRecipes() {
   const newRecipes = [];
   const newImports = new Map();
   
-  // Listar archivos de imagen disponibles
-  const availableImages = fs.existsSync(assetsDir)
-    ? fs.readdirSync(assetsDir).filter(f => /\.(jpg|jpeg|png|gif)$/i.test(f))
-    : [];
-  
-  console.log('📁 Available images:', availableImages);
-  
   if (fs.existsSync(recipesDir)) {
     fs.readdirSync(recipesDir)
       .filter(file => file.endsWith('.json'))
@@ -49,29 +48,33 @@ function mergeRecipes() {
           const jsonContent = fs.readFileSync(path.join(recipesDir, file), 'utf8');
           const recipe = JSON.parse(jsonContent);
           
+          console.log(`📖 Processing recipe: ${recipe.id}`);
+          
           // Generar nombre de variable para el import
           const varName = recipe.id
             .split('-')
             .map((word, index) => 
               index === 0 
-                ? word 
+                ? word.replace(/[^a-zA-Z0-9]/g, '') // Remover emojis
                 : word.charAt(0).toUpperCase() + word.slice(1)
             )
             .join('');
           
-          // Buscar imagen por ID
-          const matchingImage = availableImages.find(img => 
-            img.toLowerCase().includes(recipe.id.toLowerCase())
-          );
+          // Buscar imagen usando el mapeo
+          const imageName = imageMapping[recipe.id];
           
-          if (matchingImage) {
-            const imagePath = `../assets/${matchingImage}`;
+          if (imageName && fs.existsSync(`${assetsDir}/${imageName}`)) {
+            const imagePath = `../assets/${imageName}`;
             newImports.set(imagePath, varName);
             recipe.imageVar = varName;
-            console.log(`✅ Found image for ${recipe.id}: ${matchingImage}`);
+            console.log(`✅ Found image for ${recipe.id}: ${imageName}`);
           } else {
             console.warn(`⚠️ Image not found for recipe: ${recipe.id}`);
-            console.warn(`   Available images: ${availableImages.join(', ')}`);
+            if (imageName) {
+              console.warn(`   Expected: ${imageName} in ${assetsDir}`);
+            } else {
+              console.warn(`   No mapping found for ID: ${recipe.id}`);
+            }
             recipe.imageVar = null;
           }
           
