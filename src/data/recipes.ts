@@ -1,5 +1,6 @@
 import pumpkinSoup from '../assets/pumpkin-soup.jpg';
 import pistoDish from '../assets/pisto-dish.jpg';
+import defaultRecipeImg from '../assets/default-recipe.jpg';
 
 export interface Recipe {
   id: string;
@@ -9,10 +10,10 @@ export interface Recipe {
   tags: string[];
   ingredients: string[];
   steps: string[];
-  image?: string;
+  image: string; // Requerido, no opcional
 }
 
-export const DEFAULT_RECIPE_IMAGE = '/src/assets/default-recipe.jpg';
+export const DEFAULT_RECIPE_IMAGE = defaultRecipeImg;
 
 export const recipes: Recipe[] = [
   {
