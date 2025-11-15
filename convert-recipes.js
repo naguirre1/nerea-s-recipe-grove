@@ -47,7 +47,7 @@ function convertRecipe(filePath) {
   console.log(`✅ Converted: ${filePath}`);
 }
 
-const recipesDir = process.argv[2] || './recipes';
+const recipesDir = process.argv[2] || './recipes-external/🌳 Forest/🕷️ Recipes';
 if (fs.existsSync(recipesDir)) {
   fs.readdirSync(recipesDir)
     .filter(file => file.endsWith('.md'))
