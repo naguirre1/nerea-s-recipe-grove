@@ -1,7 +1,3 @@
-import pumpkinSoup from '../assets/pumpkin-soup.jpg';
-import pistoDish from '../assets/pisto-dish.jpg';
-import defaultRecipeImg from '../assets/default-recipe.jpg';
-
 export interface Recipe {
   id: string;
   emoji: string;
@@ -13,7 +9,7 @@ export interface Recipe {
   image: string;
 }
 
-export const DEFAULT_RECIPE_IMAGE = defaultRecipeImg;
+export const DEFAULT_RECIPE_IMAGE = '/assets/default-recipe.jpg';
 
 export const recipes: Recipe[] = [
   {
@@ -39,7 +35,7 @@ export const recipes: Recipe[] = [
       "Ajustar la consistencia con agua o caldo si es necesario.",
       "Salpimentar al gusto y servir caliente."
     ],
-    image: pumpkinSoup
+    image: '/assets/pumpkin-soup.jpg'
   },
   {
     id: "pisto",
@@ -65,6 +61,6 @@ export const recipes: Recipe[] = [
       "Añadir las patatas y el calabacín fritos.",
       "Poner un huevo en el centro y servir cuando esté cuajado."
     ],
-    image: pistoDish
+    image: '/assets/pisto-dish.jpg'
   }
 ];
