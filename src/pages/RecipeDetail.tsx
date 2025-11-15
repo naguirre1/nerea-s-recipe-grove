@@ -1,0 +1,149 @@
+import { useParams, Link } from "react-router-dom";
+import { recipes } from "@/data/recipes";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, ChefHat, Clock, Users } from "lucide-react";
+
+const RecipeDetail = () => {
+  const { id } = useParams();
+  const recipe = recipes.find((r) => r.id === id);
+
+  if (!recipe) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">Receta no encontrada</h1>
+          <Link to="/">
+            <Button variant="default">Volver al inicio</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <div className="relative h-[60vh] overflow-hidden">
+        <img
+          src={recipe.image}
+          alt={recipe.title}
+          className="h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/40 to-transparent" />
+        <div className="absolute inset-0 flex items-end">
+          <div className="container mx-auto px-4 pb-12 animate-fade-in">
+            <Link to="/">
+              <Button variant="ghost" size="sm" className="mb-4 text-primary-foreground hover:text-primary-foreground/80 hover:bg-primary-foreground/10">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Volver
+              </Button>
+            </Link>
+            <div className="flex items-center gap-4 mb-4">
+              <span className="text-8xl">{recipe.emoji}</span>
+              <div>
+                <h1 className="text-5xl font-serif font-bold text-primary-foreground mb-2">
+                  {recipe.title}
+                </h1>
+                <p className="text-xl text-primary-foreground/90">
+                  {recipe.description}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="container mx-auto px-4 py-12 max-w-4xl">
+        {/* Tags */}
+        <div className="flex flex-wrap gap-2 mb-8 animate-slide-up">
+          {recipe.tags.map((tag) => (
+            <Badge key={tag} variant="secondary" className="text-sm">
+              #{tag}
+            </Badge>
+          ))}
+        </div>
+
+        {/* Meta Info */}
+        <div className="grid grid-cols-3 gap-4 mb-12 animate-scale-in">
+          <div className="bg-card p-6 rounded-lg border border-border text-center">
+            <Clock className="h-8 w-8 mx-auto mb-2 text-primary" />
+            <p className="text-sm text-muted-foreground">Tiempo</p>
+            <p className="text-lg font-semibold">45 min</p>
+          </div>
+          <div className="bg-card p-6 rounded-lg border border-border text-center">
+            <Users className="h-8 w-8 mx-auto mb-2 text-primary" />
+            <p className="text-sm text-muted-foreground">Porciones</p>
+            <p className="text-lg font-semibold">4 personas</p>
+          </div>
+          <div className="bg-card p-6 rounded-lg border border-border text-center">
+            <ChefHat className="h-8 w-8 mx-auto mb-2 text-primary" />
+            <p className="text-sm text-muted-foreground">Dificultad</p>
+            <p className="text-lg font-semibold">Fácil</p>
+          </div>
+        </div>
+
+        {/* Ingredients */}
+        <div className="mb-12 animate-fade-in">
+          <h2 className="text-3xl font-serif font-bold mb-6 text-foreground flex items-center gap-3">
+            <span className="text-4xl">🥕</span>
+            Ingredientes
+          </h2>
+          <div className="bg-card border border-border rounded-lg p-8">
+            <ul className="space-y-3">
+              {recipe.ingredients.map((ingredient, index) => (
+                <li
+                  key={index}
+                  className="flex items-start gap-3 text-lg"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <span className="text-primary text-2xl">•</span>
+                  <span className="text-foreground">{ingredient}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Steps */}
+        <div className="animate-fade-in">
+          <h2 className="text-3xl font-serif font-bold mb-6 text-foreground flex items-center gap-3">
+            <span className="text-4xl">👨‍🍳</span>
+            Elaboración
+          </h2>
+          <div className="space-y-6">
+            {recipe.steps.map((step, index) => (
+              <div
+                key={index}
+                className="bg-card border border-border rounded-lg p-6 transition-all duration-300 hover:shadow-[var(--shadow-soft)] hover:border-primary/30"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg">
+                    {index + 1}
+                  </div>
+                  <p className="text-foreground text-lg leading-relaxed pt-1">
+                    {step}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Back Button */}
+        <div className="mt-12 text-center">
+          <Link to="/">
+            <Button size="lg" className="bg-primary hover:bg-rust text-primary-foreground">
+              <ArrowLeft className="mr-2 h-5 w-5" />
+              Ver todas las recetas
+            </Button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default RecipeDetail;
