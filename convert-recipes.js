@@ -27,14 +27,21 @@ function convertRecipe(filePath) {
     .filter(line => line.trim().startsWith('-'))
     .map(line => line.trim().replace(/^-\s*/, ''));
   
-  const recipeId = path.basename(filePath, '.md')
+  // Extraer el nombre del archivo sin emojis
+  const fileName = path.basename(filePath, '.md');
+  const recipeId = fileName
+    .replace(/^[\p{Emoji}]+\s*/, '') // Remover emoji del inicio
     .toLowerCase()
     .replace(/\s+/g, '-');
   
+  // Extraer emoji del nombre del archivo
+  const emojiMatch = fileName.match(/^([\p{Emoji}]+)/u);
+  const emoji = emojiMatch ? emojiMatch[1] : "🍽️";
+  
   const recipe = {
     id: recipeId,
-    emoji: "🎃",
-    title: path.basename(filePath, '.md'),
+    emoji: emoji,
+    title: fileName,
     description: "Recipe description",
     tags,
     ingredients,
@@ -44,7 +51,7 @@ function convertRecipe(filePath) {
   
   const outputPath = filePath.replace(/\.md$/, '.json');
   fs.writeFileSync(outputPath, JSON.stringify(recipe, null, 2));
-  console.log(`✅ Converted: ${filePath}`);
+  console.log(`✅ Converted: ${filePath} → ID: ${recipeId}, Emoji: ${emoji}`);
 }
 
 const recipesDir = process.argv[2] || './recipes-external/🌳 Forest/🕷️ Recipes';
