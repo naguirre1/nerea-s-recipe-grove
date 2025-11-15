@@ -38,6 +38,9 @@ jobs:
       - name: Convert Recipe Format
         run: node convert-recipes.js "./recipes-external/🌳 Forest/🕷️ Recipes"
         
+      - name: Merge Recipes into recipes.ts
+        run: node merge-recipes.js
+        
       - name: Build
         run: npm run build
         env:
