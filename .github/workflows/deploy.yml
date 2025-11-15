@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Checkout main repo
         uses: actions/checkout@v4
-      
+        
       - name: Checkout recipes repo
         uses: actions/checkout@v4
         with:
@@ -36,7 +36,7 @@ jobs:
         run: npm ci
 
       - name: Convert Recipe Format
-        run: node convert-recipes.js ./recipes-external
+        run: node convert-recipes.js "./recipes-external/🌳 Forest/🕷️ Recipes"
         
       - name: Build
         run: npm run build
