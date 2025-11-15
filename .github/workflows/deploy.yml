@@ -28,6 +28,9 @@ jobs:
           
       - name: Install dependencies
         run: npm ci
+
+      - name: Convert Recipe Format
+        run: node convert-recipes.js ./recipes
         
       - name: Build
         run: npm run build
