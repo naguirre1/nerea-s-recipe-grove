@@ -13,6 +13,15 @@ function mergeRecipes() {
   // Leer el contenido actual de recipes.ts
   let currentContent = fs.readFileSync(recipesFile, 'utf8');
   
+  // Extraer los imports existentes
+  const importRegex = /import\s+(\w+)\s+from\s+['"]([^'"]+)['"]/g;
+  const existingImports = new Map();
+  let match;
+  
+  while ((match = importRegex.exec(currentContent)) !== null) {
+    existingImports.set(match[2], match[1]);
+  }
+  
   // Extraer el array de recetas actual
   const arrayMatch = currentContent.match(/export const recipes: Recipe\[\] = \[([\s\S]*?)\];/);
   if (!arrayMatch) {
@@ -22,6 +31,8 @@ function mergeRecipes() {
   
   // Leer todos los JSON convertidos
   const newRecipes = [];
+  const newImports = new Map();
+  
   if (fs.existsSync(recipesDir)) {
     fs.readdirSync(recipesDir)
       .filter(file => file.endsWith('.json'))
@@ -29,6 +40,30 @@ function mergeRecipes() {
         try {
           const jsonContent = fs.readFileSync(path.join(recipesDir, file), 'utf8');
           const recipe = JSON.parse(jsonContent);
+          
+          // Generar nombre de variable para el import
+          // Ej: crema-calabaza -> cremaCalabraza
+          const varName = recipe.id
+            .split('-')
+            .map((word, index) => 
+              index === 0 
+                ? word 
+                : word.charAt(0).toUpperCase() + word.slice(1)
+            )
+            .join('');
+          
+          // Crear ruta de imagen esperada
+          const imagePath = `../assets/${recipe.id}.jpg`;
+          
+          // Guardar import si la imagen existe en assets
+          if (fs.existsSync(`./src/assets/${recipe.id}.jpg`)) {
+            newImports.set(imagePath, varName);
+            recipe.imageVar = varName;
+          } else {
+            console.warn(`⚠️ Image not found for recipe: ${recipe.id}`);
+            recipe.imageVar = null;
+          }
+          
           newRecipes.push(recipe);
           console.log(`✅ Loaded: ${file}`);
         } catch (err) {
@@ -42,8 +77,18 @@ function mergeRecipes() {
     return;
   }
   
-  // Formatear las nuevas recetas como objetos TypeScript
+  // Combinar imports (existentes + nuevos)
+  const allImports = new Map([...existingImports, ...newImports]);
+  
+  // Generar líneas de import
+  const importLines = Array.from(allImports.entries())
+    .map(([path, varName]) => `import ${varName} from '${path}';`)
+    .join('\n');
+  
+  // Generar objetos de recetas
   const recipesFormatted = newRecipes.map(recipe => {
+    const imageProperty = recipe.imageVar ? `,\n    image: ${recipe.imageVar}` : '';
+    
     return `  {
     id: "${recipe.id}",
     emoji: "${recipe.emoji}",
@@ -55,15 +100,31 @@ function mergeRecipes() {
     ],
     steps: [
       ${recipe.steps.map(step => `"${step.replace(/"/g, '\\"')}"`).join(',\n      ')}
-    ]${recipe.image ? `,\n    image: "${recipe.image}"` : ''}
+    ]${imageProperty}
   }`;
   }).join(',\n');
   
-  // Reemplazar el array de recetas
-  const newContent = currentContent.replace(
-    /export const recipes: Recipe\[\] = \[([\s\S]*?)\];/,
-    `export const recipes: Recipe[] = [\n${recipesFormatted}\n];`
-  );
+  // Construir el nuevo contenido del archivo
+  const interfaceAndDefault = `export interface Recipe {
+  id: string;
+  emoji: string;
+  title: string;
+  description: string;
+  tags: string[];
+  ingredients: string[];
+  steps: string[];
+  image?: string;
+}
+
+export const DEFAULT_RECIPE_IMAGE = '/src/assets/default-recipe.jpg';`;
+
+  const newContent = `${importLines}
+
+${interfaceAndDefault}
+
+export const recipes: Recipe[] = [
+${recipesFormatted}
+];`;
   
   // Guardar el archivo actualizado
   fs.writeFileSync(recipesFile, newContent);
