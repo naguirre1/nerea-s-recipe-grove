@@ -10,7 +10,7 @@ export interface Recipe {
 }
 
 // Default image for recipes without a specific image
-export const DEFAULT_RECIPE_IMAGE = "/nerea-s-recipe-grove/src/assets/default-recipe.jpg";
+export const DEFAULT_RECIPE_IMAGE = "../../assets/default-recipe.jpg";
 
 export const recipes: Recipe[] = [
   {
@@ -36,7 +36,7 @@ export const recipes: Recipe[] = [
       "Ajustar la consistencia con agua o caldo si es necesario.",
       "Salpimentar al gusto y servir caliente."
     ],
-    image: "/nerea-s-recipe-grove/src/assets/pumpkin-soup.jpg"
+    image: "../../assets/pumpkin-soup.jpg"
   },
   {
     id: "pisto",
@@ -62,6 +62,6 @@ export const recipes: Recipe[] = [
       "Añadir las patatas y el calabacín fritos.",
       "Poner un huevo en el centro y servir cuando esté cuajado."
     ],
-    image: "/nerea-s-recipe-grove/src/assets/pisto-dish.jpg"
+    image: "../../assets/pisto-dish.jpg"
   }
 ];
