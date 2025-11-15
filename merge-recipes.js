@@ -4,7 +4,8 @@ import path from 'path';
 // Mapeo explícito de IDs de recetas a nombres de imagen
 const imageMapping = {
   '🎃-crema-de-calabaza': 'pumpkin-soup.jpg',
-  '🥣-pisto': 'pisto-dish.jpg'
+  '🥣-pisto': 'pisto-dish.jpg',
+  'tarta-de-zanahoria': 'tarta-de-zanahoria.jpg'
 };
 
 function mergeRecipes() {
