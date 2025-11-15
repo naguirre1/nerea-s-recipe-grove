@@ -35,7 +35,7 @@ export const recipes: Recipe[] = [
       "Ajustar la consistencia con agua o caldo si es necesario.",
       "Salpimentar al gusto y servir caliente."
     ],
-    image: '/assets/pumpkin-soup.jpg'
+    image: "/assets/pumpkin-soup.jpg"
   },
   {
     id: "pisto",
@@ -61,6 +61,6 @@ export const recipes: Recipe[] = [
       "Añadir las patatas y el calabacín fritos.",
       "Poner un huevo en el centro y servir cuando esté cuajado."
     ],
-    image: '/assets/pisto-dish.jpg'
+    image: "/assets/pisto-dish.jpg"
   }
 ];
