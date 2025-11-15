@@ -20,11 +20,11 @@ jobs:
     steps:
       - name: Checkout main repo
         uses: actions/checkout@v4
-        
+      
       - name: Checkout recipes repo
         uses: actions/checkout@v4
         with:
-          repository: naguirre1/knowledge-garden-nerea/tree/main/🌳%20Forest/🕷%EF%B8%8F%20Recipes
+          repository: naguirre1/knowledge-garden-nerea
           path: ./recipes-external
         
       - name: Setup Node
