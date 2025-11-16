@@ -4,39 +4,43 @@ import path from 'path';
 function escapeString(str) {
   if (!str) return '';
   return str
-    .replace(/\\/g, '\\\\')      // Escapar backslash
-    .replace(/"/g, '\\"')        // Escapar comillas dobles
-    .replace(/\n/g, '\\n')       // Escapar saltos de línea
-    .replace(/\r/g, '\\r')       // Escapar retorno de carro
-    .replace(/\t/g, '\\t');      // Escapar tabs
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r')
+    .replace(/\t/g, '\\t');
 }
 
 function mergeTerms() {
   const termsDir = './recipes-external/🌳 Forest/🕷️ Recipes';
   const termsFile = './src/data/terms.ts';
   
+  console.log('📚 Starting merge-terms.js');
+  
   // Leer todos los JSON de términos convertidos
   const terms = [];
   
   if (fs.existsSync(termsDir)) {
-    fs.readdirSync(termsDir)
-      .filter(file => file.endsWith('.term.json'))
-      .forEach(file => {
-        try {
-          const jsonContent = fs.readFileSync(path.join(termsDir, file), 'utf8');
-          const term = JSON.parse(jsonContent);
-          
-          console.log(`📚 Processing term: ${term.id}`);
-          terms.push(term);
-          console.log(`✅ Loaded: ${file}`);
-        } catch (err) {
-          console.error(`❌ Error loading ${file}:`, err.message);
-        }
-      });
+    const termFiles = fs.readdirSync(termsDir)
+      .filter(file => file.endsWith('.term.json'));
+    
+    console.log(`Found ${termFiles.length} term files`);
+    
+    termFiles.forEach(file => {
+      try {
+        const jsonContent = fs.readFileSync(path.join(termsDir, file), 'utf8');
+        const term = JSON.parse(jsonContent);
+        
+        console.log(`✅ Loaded term: ${term.id}`);
+        terms.push(term);
+      } catch (err) {
+        console.error(`❌ Error loading ${file}:`, err.message);
+      }
+    });
   }
   
   if (terms.length === 0) {
-    console.warn('⚠️ No terms found to merge');
+    console.warn('⚠️ No terms found, skipping merge-terms');
     return;
   }
   
@@ -77,7 +81,7 @@ ${termsFormatted}
   
   // Guardar el archivo actualizado
   fs.writeFileSync(termsFile, newContent);
-  console.log(`✨ Updated terms.ts with ${terms.length} terms`);
+  console.log(`✅ Successfully wrote terms.ts with ${terms.length} terms\n`);
 }
 
 mergeTerms();
