@@ -17,10 +17,10 @@ function convertRecipe(filePath) {
     .map(tag => tag.trim())
     .filter(tag => tag.length > 0);
   
-  // Skip files tagged as #term - they should be processed by convert-terms.js
+  // Skip if it's a term (handled by convert-terms.js)
   if (tags.includes('term')) {
-    console.log(`⏭️  Skipping term: ${path.basename(filePath)}`);
-    return null;
+    console.log(`⏭️ Skipping term (will be processed by convert-terms.js): ${filePath}`);
+    return;
   }
   
   const ingredients = ingredientsSection
@@ -57,20 +57,15 @@ function convertRecipe(filePath) {
   
   const outputPath = filePath.replace(/\.md$/, '.json');
   fs.writeFileSync(outputPath, JSON.stringify(recipe, null, 2));
-  console.log(`✅ Converted recipe: ${filePath} → ID: ${recipeId}, Emoji: ${emoji}`);
-  return recipe;
+  console.log(`✅ Converted RECIPE: ${filePath} → ID: ${recipeId}, Emoji: ${emoji}`);
 }
 
 const recipesDir = process.argv[2] || './recipes-external/🌳 Forest/🕷️ Recipes';
 if (fs.existsSync(recipesDir)) {
-  const recipes = [];
   fs.readdirSync(recipesDir)
     .filter(file => file.endsWith('.md'))
-    .forEach(file => {
-      const result = convertRecipe(path.join(recipesDir, file));
-      if (result) recipes.push(result);
-    });
-  console.log(`✨ Recipe conversion complete! Processed ${recipes.length} recipes.`);
+    .forEach(file => convertRecipe(path.join(recipesDir, file)));
+  console.log('✨ Recipe conversion complete!');
 } else {
   console.warn(`⚠️ Directory not found: ${recipesDir}`);
 }
