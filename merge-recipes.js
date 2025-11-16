@@ -5,17 +5,18 @@ import path from 'path';
 const imageMapping = {
   'crema-de-calabaza': 'pumpkin-soup.jpg',
   'pisto': 'pisto-dish.jpg',
-  'tarta-de-zanahoria': 'tarta-de-zanahoria.jpg'
+  'tarta-de-zanahoria-bizcocho': 'tarta-de-zanahoria.jpg',
+  'buttercream': 'default-recipe.jpg'  // Si no tienes imagen
 };
 
 function escapeString(str) {
   if (!str) return '';
   return str
-    .replace(/\\/g, '\\\\')      // Escapar backslash
-    .replace(/"/g, '\\"')        // Escapar comillas dobles
-    .replace(/\n/g, '\\n')       // Escapar saltos de línea
-    .replace(/\r/g, '\\r')       // Escapar retorno de carro
-    .replace(/\t/g, '\\t');      // Escapar tabs
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r')
+    .replace(/\t/g, '\\t');
 }
 
 function mergeRecipes() {
@@ -28,32 +29,11 @@ function mergeRecipes() {
     return;
   }
   
-  // Leer el contenido actual de recipes.ts
-  let currentContent = fs.readFileSync(recipesFile, 'utf8');
-  
-  // Extraer los imports existentes
-  const importRegex = /import\s+(\w+)\s+from\s+['"]([^'"]+)['"]/g;
-  const existingImports = new Map();
-  let match;
-  
-  while ((match = importRegex.exec(currentContent)) !== null) {
-    existingImports.set(match[2], match[1]);
-  }
-  
-  // Extraer el array de recetas actual
-  const arrayMatch = currentContent.match(/export const recipes: Recipe\[\] = \[([\s\S]*?)\];/);
-  if (!arrayMatch) {
-    console.warn('⚠️ Could not find recipes array in recipes.ts');
-    return;
-  }
-  
-  // Leer todos los JSON convertidos (SOLO recetas, no términos)
   const newRecipes = [];
-  const newImports = new Map();
   
   if (fs.existsSync(recipesDir)) {
     fs.readdirSync(recipesDir)
-      .filter(file => file.endsWith('.json') && !file.endsWith('.term.json')) // ← IMPORTANTE: NO procesar .term.json
+      .filter(file => file.endsWith('.json') && !file.endsWith('.term.json'))
       .forEach(file => {
         try {
           const jsonContent = fs.readFileSync(path.join(recipesDir, file), 'utf8');
@@ -61,27 +41,14 @@ function mergeRecipes() {
           
           console.log(`📖 Processing recipe: ${recipe.id}`);
           
-          // Generar nombre de variable para el import
-          const varName = recipe.id
-            .split('-')
-            .map((word, index) => 
-              index === 0 
-                ? word.replace(/[^a-zA-Z0-9]/g, '') // Remover emojis
-                : word.charAt(0).toUpperCase() + word.slice(1)
-            )
-            .join('');
-          
-          // Buscar imagen usando el mapeo
           const imageName = imageMapping[recipe.id];
           
           if (imageName && fs.existsSync(`${assetsDir}/${imageName}`)) {
-            const imagePath = `../assets/${imageName}`;
-            newImports.set(imagePath, varName);
-            recipe.imageVar = varName;
+            recipe.imageUrl = `/nerea-s-recipe-grove/assets/${imageName}`;
             console.log(`✅ Found image for ${recipe.id}: ${imageName}`);
           } else {
-            console.warn(`⚠️ Image not found for recipe: ${recipe.id}`);
-            recipe.imageVar = null;
+            console.warn(`⚠️ Image not found for recipe: ${recipe.id}, using default`);
+            recipe.imageUrl = `/nerea-s-recipe-grove/assets/default-recipe.jpg`;
           }
           
           newRecipes.push(recipe);
@@ -97,19 +64,7 @@ function mergeRecipes() {
     return;
   }
   
-  // Combinar imports (existentes + nuevos)
-  const allImports = new Map([...existingImports, ...newImports]);
-  
-  // Generar líneas de import
-  const importLines = Array.from(allImports.entries())
-    .map(([path, varName]) => `import ${varName} from '${path}';`)
-    .join('\n');
-  
-  // Generar objetos de recetas
   const recipesFormatted = newRecipes.map(recipe => {
-    const imageProperty = recipe.imageVar ? `,\n    image: ${recipe.imageVar}` : '';
-    
-    // Ensure ingredients and steps are arrays
     const ingredients = Array.isArray(recipe.ingredients) ? recipe.ingredients : [];
     const steps = Array.isArray(recipe.steps) ? recipe.steps : [];
     const tags = Array.isArray(recipe.tags) ? recipe.tags : [];
@@ -125,11 +80,11 @@ function mergeRecipes() {
     ],
     steps: [
       ${steps.map(step => `"${escapeString(step)}"`).join(',\n      ')}
-    ]${imageProperty}
+    ],
+    image: "${recipe.imageUrl}"
   }`;
   }).join(',\n');
   
-  // Construir el nuevo contenido del archivo
   const interfaceAndDefault = `export interface Recipe {
   id: string;
   emoji: string;
@@ -138,20 +93,17 @@ function mergeRecipes() {
   tags: string[];
   ingredients: string[];
   steps: string[];
-  image?: string;
+  image: string;
 }
 
-export const DEFAULT_RECIPE_IMAGE = '/src/assets/default-recipe.jpg';`;
+export const DEFAULT_RECIPE_IMAGE = '/nerea-s-recipe-grove/assets/default-recipe.jpg';`;
 
-  const newContent = `${importLines}
-
-${interfaceAndDefault}
+  const newContent = `${interfaceAndDefault}
 
 export const recipes: Recipe[] = [
 ${recipesFormatted}
 ];`;
   
-  // Guardar el archivo actualizado
   fs.writeFileSync(recipesFile, newContent);
   console.log(`✨ Updated recipes.ts with ${newRecipes.length} new recipes`);
 }
