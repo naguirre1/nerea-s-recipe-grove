@@ -44,11 +44,12 @@ function mergeRecipes() {
           const imageName = imageMapping[recipe.id];
           
           if (imageName && fs.existsSync(`${assetsDir}/${imageName}`)) {
-            recipe.imageUrl = `/nerea-s-recipe-grove/src/assets/${imageName}`;
+            // Usar la ruta que funcionaba: /assets/...
+            recipe.imageUrl = `/assets/${imageName}`;
             console.log(`✅ Found image for ${recipe.id}: ${imageName}`);
           } else {
             console.warn(`⚠️ Image not found for recipe: ${recipe.id}, using default`);
-            recipe.imageUrl = `/nerea-s-recipe-grove/src/assets/default-recipe.jpg`;
+            recipe.imageUrl = `/assets/default-recipe.jpg`;
           }
           
           newRecipes.push(recipe);
@@ -96,7 +97,7 @@ function mergeRecipes() {
   image: string;
 }
 
-export const DEFAULT_RECIPE_IMAGE = '/nerea-s-recipe-grove/src/assets/default-recipe.jpg';`;
+export const DEFAULT_RECIPE_IMAGE = '/assets/default-recipe.jpg';`;
 
   const newContent = `${interfaceAndDefault}
 
