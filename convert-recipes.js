@@ -33,7 +33,6 @@ function convertRecipe(filePath) {
     .split('\n')
     .filter(line => {
       const trimmed = line.trim();
-      // Acepta líneas que empiezan con "-" o con números seguidos de "."
       return trimmed.startsWith('-') || /^\d+\./.test(trimmed);
     })
     .map(line => {
@@ -51,12 +50,12 @@ function convertRecipe(filePath) {
   
   // Remover emojis del inicio y convertir a ID
   const recipeId = fileName
-    .replace(/^[\p{Emoji}\s]+/gu, '')  // Remover emojis y espacios del inicio
+    .replace(/^[\p{Emoji}\s]+/gu, '')
     .toLowerCase()
-    .replace(/\s+/g, '-')               // Espacios a guiones
-    .replace(/[()]/g, '')                // Quitar paréntesis
-    .replace(/-+/g, '-')                 // Quitar guiones duplicados
-    .replace(/^-|-$/g, '');              // Quitar guiones del inicio/final
+    .replace(/\s+/g, '-')
+    .replace(/[()]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
   
   // Extraer emoji del nombre del archivo
   const emojiMatch = fileName.match(/^([\p{Emoji}]+)/u);
