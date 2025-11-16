@@ -3,6 +3,7 @@ import { recipes, DEFAULT_RECIPE_IMAGE } from "@/data/recipes";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ChefHat, Clock, Users } from "lucide-react";
+import { NavLink } from "@/components/NavLink";
 
 const RecipeDetail = () => {
   const { id } = useParams();
@@ -23,6 +24,25 @@ const RecipeDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Navigation */}
+      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
+        <nav className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <Link to="/" className="text-2xl font-bold text-primary hover:text-primary/80 transition-colors">
+              🌳 Forest Kitchen
+            </Link>
+            <div className="flex gap-6">
+              <NavLink to="/" className="text-foreground hover:text-primary transition-colors" activeClassName="text-primary font-semibold">
+                Recipes
+              </NavLink>
+              <NavLink to="/glossary" className="text-foreground hover:text-primary transition-colors" activeClassName="text-primary font-semibold">
+                Glossary
+              </NavLink>
+            </div>
+          </div>
+        </nav>
+      </header>
+
       {/* Hero Section */}
       <div className="relative h-[60vh] overflow-hidden">
         <img

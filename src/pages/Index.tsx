@@ -1,11 +1,32 @@
+import { Link } from "react-router-dom";
 import { RecipeCard } from "@/components/RecipeCard";
 import { recipes } from "@/data/recipes";
 import { ChefHat, Leaf, Utensils } from "lucide-react";
 import heroImage from "@/assets/hero-cooking.jpg";
+import { NavLink } from "@/components/NavLink";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
+      {/* Navigation */}
+      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
+        <nav className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <Link to="/" className="text-2xl font-bold text-primary hover:text-primary/80 transition-colors">
+              🌳 Forest Kitchen
+            </Link>
+            <div className="flex gap-6">
+              <NavLink to="/" className="text-foreground hover:text-primary transition-colors" activeClassName="text-primary font-semibold">
+                Recipes
+              </NavLink>
+              <NavLink to="/glossary" className="text-foreground hover:text-primary transition-colors" activeClassName="text-primary font-semibold">
+                Glossary
+              </NavLink>
+            </div>
+          </div>
+        </nav>
+      </header>
+
       {/* Hero Section */}
       <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
