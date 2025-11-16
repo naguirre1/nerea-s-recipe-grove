@@ -35,17 +35,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Convert Recipe Format
-        run: node convert-recipes.js "./recipes-external/🌳 Forest/🕷️ Recipes"
-        
       - name: Convert Terms Format
         run: node convert-terms.js "./recipes-external/🌳 Forest/🕷️ Recipes"
         
+      - name: Merge Terms into terms.ts
+        run: node merge-terms.js
+
+      - name: Convert Recipe Format
+        run: node convert-recipes.js "./recipes-external/🌳 Forest/🕷️ Recipes"
+        
       - name: Merge Recipes into recipes.ts
         run: node merge-recipes.js
-        
-      - name: Merge Terms into glossary.ts
-        run: node merge-glossary.js
         
       - name: Build
         run: npm run build
