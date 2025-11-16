@@ -12,7 +12,12 @@ const imageMapping = {
   'vinagreta': 'vinagreta.jpg',
   'brunoise': 'brunoise.jpg',
   'rabas': 'rabas.jpg',
-  'default-recipe': 'default-recipe.jpg'
+  'default-recipe': 'default-recipe.jpg',
+  'hummus': 'hummus.jpg',
+  'magdalenas': 'magdalenas.jpg',
+  'olla-ferroviaria': 'olla-ferroviaria.jpg',
+  'rodaballo': 'rodaballo.jpg',
+  'tarta-de-queso': 'tarta-de-queso.jpg',
 };
 
 function escapeString(str) {
