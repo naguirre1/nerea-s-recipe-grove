@@ -6,7 +6,7 @@ const imageMapping = {
   'crema-de-calabaza': 'pumpkin-soup.jpg',
   'pisto': 'pisto-dish.jpg',
   'tarta-de-zanahoria-bizcocho': 'tarta-de-zanahoria.jpg',
-  'buttercream': 'default-recipe.jpg'
+  'buttercream': 'buttercream.jpg'
 };
 
 function escapeString(str) {
