@@ -11,6 +11,7 @@ const imageMapping = {
   'antxoas-en-vinagre': 'antxoas-en-vinagre.jpg',
   'vinagreta': 'vinagreta.jpg',
   'brunoise': 'brunoise.jpg',
+  'rabas': 'rabas.jpg',
   'default-recipe': 'default-recipe.jpg'
 };
 
