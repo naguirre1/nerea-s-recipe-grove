@@ -104,17 +104,22 @@ function mergeRecipes() {
   const recipesFormatted = newRecipes.map(recipe => {
     const imageProperty = recipe.imageVar ? `,\n    image: ${recipe.imageVar}` : '';
     
+    // Ensure ingredients and steps are arrays
+    const ingredients = Array.isArray(recipe.ingredients) ? recipe.ingredients : [];
+    const steps = Array.isArray(recipe.steps) ? recipe.steps : [];
+    const tags = Array.isArray(recipe.tags) ? recipe.tags : [];
+    
     return `  {
     id: "${recipe.id}",
-    emoji: "${recipe.emoji}",
+    emoji: "${recipe.emoji || '🍽️'}",
     title: "${recipe.title}",
-    description: "${recipe.description}",
-    tags: [${recipe.tags.map(tag => `"${tag}"`).join(', ')}],
+    description: "${recipe.description || ''}",
+    tags: [${tags.map(tag => `"${tag}"`).join(', ')}],
     ingredients: [
-      ${recipe.ingredients.map(ing => `"${ing.replace(/"/g, '\\"')}"`).join(',\n      ')}
+      ${ingredients.map(ing => `"${ing.replace(/"/g, '\\"')}"`).join(',\n      ')}
     ],
     steps: [
-      ${recipe.steps.map(step => `"${step.replace(/"/g, '\\"')}"`).join(',\n      ')}
+      ${steps.map(step => `"${step.replace(/"/g, '\\"')}"`).join(',\n      ')}
     ]${imageProperty}
   }`;
   }).join(',\n');
