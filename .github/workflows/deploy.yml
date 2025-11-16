@@ -45,6 +45,8 @@ jobs:
         run: node convert-recipes.js "./recipes-external/🌳 Forest/🕷️ Recipes"
         
       - name: Merge Recipes into recipes.ts
+        env:
+          NODE_ENV: production
         run: node merge-recipes.js
         
       - name: Build
