@@ -10,7 +10,8 @@ const imageMapping = {
   'lactonesa': 'lactonesa.jpg',
   'antxoas-en-vinagre': 'antxoas-en-vinagre.jpg',
   'vinagreta': 'vinagreta.jpg',
-  'brunoise': 'brunoise.jpg'
+  'brunoise': 'brunoise.jpg',
+  'default-recipe': 'default-recipe.jpg'
 };
 
 function escapeString(str) {
