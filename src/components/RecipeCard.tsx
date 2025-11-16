@@ -8,15 +8,6 @@ interface RecipeCardProps {
 }
 
 export const RecipeCard = ({ recipe }: RecipeCardProps) => {
-  console.log('🔍 RecipeCard debug:', {
-    id: recipe.id,
-    title: recipe.title,
-    image: recipe.image,
-    imageType: typeof recipe.image,
-    imageExists: !!recipe.image,
-    allKeys: Object.keys(recipe)
-  });
-
   return (
     <Link to={`/recipe/${recipe.id}`}>
       <Card className="group overflow-hidden transition-all duration-300 hover:shadow-[var(--shadow-card)] hover:-translate-y-1 bg-card border-border">
@@ -26,7 +17,11 @@ export const RecipeCard = ({ recipe }: RecipeCardProps) => {
             alt={recipe.title}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = DEFAULT_RECIPE_IMAGE;
+              const img = e.target as HTMLImageElement;
+              // Solo cambiar a default si no es ya la default image
+              if (!img.src.includes('default-recipe')) {
+                img.src = DEFAULT_RECIPE_IMAGE;
+              }
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
