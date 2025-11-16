@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ChefHat, Clock, Users } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
+import { StepWithLinks } from "@/components/StepWithLinks";
 
 const RecipeDetail = () => {
   const { id } = useParams();
@@ -138,20 +139,11 @@ const RecipeDetail = () => {
           </h2>
           <div className="space-y-6">
             {recipe.steps.map((step, index) => (
-              <div
+              <StepWithLinks
                 key={index}
-                className="bg-card border border-border rounded-lg p-6 transition-all duration-300 hover:shadow-[var(--shadow-soft)] hover:border-primary/30"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg">
-                    {index + 1}
-                  </div>
-                  <p className="text-foreground text-lg leading-relaxed pt-1">
-                    {step}
-                  </p>
-                </div>
-              </div>
+                text={step}
+                index={index}
+              />
             ))}
           </div>
         </div>
