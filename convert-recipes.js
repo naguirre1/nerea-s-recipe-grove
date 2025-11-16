@@ -35,10 +35,15 @@ function convertRecipe(filePath) {
   
   // Extraer el nombre del archivo sin emojis
   const fileName = path.basename(filePath, '.md');
+  
+  // Remover emojis del inicio y convertir a ID
   const recipeId = fileName
-    .replace(/^[\p{Emoji}]+\s*/, '') // Remover emoji del inicio
+    .replace(/^[\p{Emoji}\s]+/gu, '')  // Remover emojis y espacios del inicio
     .toLowerCase()
-    .replace(/\s+/g, '-');
+    .replace(/\s+/g, '-')               // Espacios a guiones
+    .replace(/[()]/g, '')                // Quitar paréntesis
+    .replace(/-+/g, '-')                 // Quitar guiones duplicados
+    .replace(/^-|-$/g, '');              // Quitar guiones del inicio/final
   
   // Extraer emoji del nombre del archivo
   const emojiMatch = fileName.match(/^([\p{Emoji}]+)/u);
