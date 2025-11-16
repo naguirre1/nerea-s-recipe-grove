@@ -9,8 +9,14 @@ const imageMapping = {
   'buttercream': 'default-recipe.jpg'
 };
 
+// DEBUG: Mostrar el entorno
+console.log('🔍 DEBUG INFO:');
+console.log('  NODE_ENV:', process.env.NODE_ENV);
+console.log('  Current directory:', process.cwd());
+
 // IMPORTANTE: El base path debe coincidir con vite.config.ts
 const BASE_URL = process.env.NODE_ENV === 'production' ? '/nerea-s-recipe-grove/' : '/';
+console.log('  BASE_URL:', BASE_URL);
 
 function escapeString(str) {
   if (!str) return '';
@@ -27,6 +33,10 @@ function mergeRecipes() {
   const recipesFile = './src/data/recipes.ts';
   const assetsDir = './src/assets';
   
+  console.log(`\n📂 Directories:`);
+  console.log(`  recipesDir exists: ${fs.existsSync(recipesDir)}`);
+  console.log(`  assetsDir exists: ${fs.existsSync(assetsDir)}`);
+  
   if (!fs.existsSync(recipesFile)) {
     console.warn('⚠️ recipes.ts not found');
     return;
@@ -35,38 +45,44 @@ function mergeRecipes() {
   const newRecipes = [];
   
   if (fs.existsSync(recipesDir)) {
-    fs.readdirSync(recipesDir)
-      .filter(file => file.endsWith('.json') && !file.endsWith('.term.json'))
-      .forEach(file => {
-        try {
-          const jsonContent = fs.readFileSync(path.join(recipesDir, file), 'utf8');
-          const recipe = JSON.parse(jsonContent);
-          
-          console.log(`📖 Processing recipe: ${recipe.id}`);
-          
-          const imageName = imageMapping[recipe.id];
-          
-          if (imageName && fs.existsSync(`${assetsDir}/${imageName}`)) {
-            // Usar BASE_URL + assets
-            recipe.imageUrl = `${BASE_URL}assets/${imageName}`;
-            console.log(`✅ Found image for ${recipe.id}: ${imageName}`);
-          } else {
-            console.warn(`⚠️ Image not found for recipe: ${recipe.id}, using default`);
-            recipe.imageUrl = `${BASE_URL}assets/default-recipe.jpg`;
-          }
-          
-          newRecipes.push(recipe);
-          console.log(`✅ Loaded: ${file}`);
-        } catch (err) {
-          console.error(`❌ Error loading ${file}:`, err.message);
+    const jsonFiles = fs.readdirSync(recipesDir)
+      .filter(file => file.endsWith('.json') && !file.endsWith('.term.json'));
+    
+    console.log(`\n📄 Found ${jsonFiles.length} recipe JSON files:`);
+    jsonFiles.forEach(f => console.log(`  - ${f}`));
+    
+    jsonFiles.forEach(file => {
+      try {
+        const jsonContent = fs.readFileSync(path.join(recipesDir, file), 'utf8');
+        const recipe = JSON.parse(jsonContent);
+        
+        console.log(`\n📖 Processing recipe: ${recipe.id}`);
+        
+        const imageName = imageMapping[recipe.id];
+        console.log(`  imageName from mapping: ${imageName}`);
+        
+        if (imageName && fs.existsSync(`${assetsDir}/${imageName}`)) {
+          recipe.imageUrl = `${BASE_URL}assets/${imageName}`;
+          console.log(`  ✅ Image found: ${recipe.imageUrl}`);
+        } else {
+          console.log(`  ❌ Image NOT found, using default`);
+          recipe.imageUrl = `${BASE_URL}assets/default-recipe.jpg`;
+          console.log(`  Using: ${recipe.imageUrl}`);
         }
-      });
+        
+        newRecipes.push(recipe);
+      } catch (err) {
+        console.error(`❌ Error loading ${file}:`, err.message);
+      }
+    });
   }
   
   if (newRecipes.length === 0) {
     console.warn('⚠️ No recipes found to merge');
     return;
   }
+  
+  console.log(`\n✨ Generating recipes.ts with ${newRecipes.length} recipes using BASE_URL: ${BASE_URL}`);
   
   const recipesFormatted = newRecipes.map(recipe => {
     const ingredients = Array.isArray(recipe.ingredients) ? recipe.ingredients : [];
@@ -109,8 +125,8 @@ ${recipesFormatted}
 ];`;
   
   fs.writeFileSync(recipesFile, newContent);
-  console.log(`✨ Updated recipes.ts with ${newRecipes.length} new recipes`);
-  console.log(`📍 Using BASE_URL: ${BASE_URL}`);
+  console.log(`\n✅ Successfully updated recipes.ts`);
+  console.log(`   Total recipes: ${newRecipes.length}`);
 }
 
 mergeRecipes();
