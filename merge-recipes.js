@@ -6,7 +6,7 @@ const imageMapping = {
   'crema-de-calabaza': 'pumpkin-soup.jpg',
   'pisto': 'pisto-dish.jpg',
   'tarta-de-zanahoria-bizcocho': 'tarta-de-zanahoria.jpg',
-  'buttercream': 'default-recipe.jpg'  // Si no tienes imagen
+  'buttercream': 'default-recipe.jpg'
 };
 
 function escapeString(str) {
@@ -44,11 +44,11 @@ function mergeRecipes() {
           const imageName = imageMapping[recipe.id];
           
           if (imageName && fs.existsSync(`${assetsDir}/${imageName}`)) {
-            recipe.imageUrl = `/nerea-s-recipe-grove/assets/${imageName}`;
+            recipe.imageUrl = `/nerea-s-recipe-grove/src/assets/${imageName}`;
             console.log(`✅ Found image for ${recipe.id}: ${imageName}`);
           } else {
             console.warn(`⚠️ Image not found for recipe: ${recipe.id}, using default`);
-            recipe.imageUrl = `/nerea-s-recipe-grove/assets/default-recipe.jpg`;
+            recipe.imageUrl = `/nerea-s-recipe-grove/src/assets/default-recipe.jpg`;
           }
           
           newRecipes.push(recipe);
@@ -96,7 +96,7 @@ function mergeRecipes() {
   image: string;
 }
 
-export const DEFAULT_RECIPE_IMAGE = '/nerea-s-recipe-grove/assets/default-recipe.jpg';`;
+export const DEFAULT_RECIPE_IMAGE = '/nerea-s-recipe-grove/src/assets/default-recipe.jpg';`;
 
   const newContent = `${interfaceAndDefault}
 
