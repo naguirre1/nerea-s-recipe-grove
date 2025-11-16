@@ -9,6 +9,9 @@ const imageMapping = {
   'buttercream': 'default-recipe.jpg'
 };
 
+// IMPORTANTE: El base path debe coincidir con vite.config.ts
+const BASE_URL = process.env.NODE_ENV === 'production' ? '/nerea-s-recipe-grove/' : '/';
+
 function escapeString(str) {
   if (!str) return '';
   return str
@@ -44,12 +47,12 @@ function mergeRecipes() {
           const imageName = imageMapping[recipe.id];
           
           if (imageName && fs.existsSync(`${assetsDir}/${imageName}`)) {
-            // Ruta relativa desde el root, Vite la transformará según el base
-            recipe.imageUrl = `/assets/${imageName}`;
+            // Usar BASE_URL + assets
+            recipe.imageUrl = `${BASE_URL}assets/${imageName}`;
             console.log(`✅ Found image for ${recipe.id}: ${imageName}`);
           } else {
             console.warn(`⚠️ Image not found for recipe: ${recipe.id}, using default`);
-            recipe.imageUrl = `/assets/default-recipe.jpg`;
+            recipe.imageUrl = `${BASE_URL}assets/default-recipe.jpg`;
           }
           
           newRecipes.push(recipe);
@@ -97,7 +100,7 @@ function mergeRecipes() {
   image: string;
 }
 
-export const DEFAULT_RECIPE_IMAGE = '/assets/default-recipe.jpg';`;
+export const DEFAULT_RECIPE_IMAGE = '${BASE_URL}assets/default-recipe.jpg';`;
 
   const newContent = `${interfaceAndDefault}
 
@@ -107,6 +110,7 @@ ${recipesFormatted}
   
   fs.writeFileSync(recipesFile, newContent);
   console.log(`✨ Updated recipes.ts with ${newRecipes.length} new recipes`);
+  console.log(`📍 Using BASE_URL: ${BASE_URL}`);
 }
 
 mergeRecipes();
