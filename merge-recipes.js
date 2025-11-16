@@ -3,10 +3,20 @@ import path from 'path';
 
 // Mapeo explícito de IDs de recetas a nombres de imagen
 const imageMapping = {
-  '🎃-crema-de-calabaza': 'pumpkin-soup.jpg',
-  '🥣-pisto': 'pisto-dish.jpg',
+  'crema-de-calabaza': 'pumpkin-soup.jpg',
+  'pisto': 'pisto-dish.jpg',
   'tarta-de-zanahoria': 'tarta-de-zanahoria.jpg'
 };
+
+function escapeString(str) {
+  if (!str) return '';
+  return str
+    .replace(/\\/g, '\\\\')      // Escapar backslash
+    .replace(/"/g, '\\"')        // Escapar comillas dobles
+    .replace(/\n/g, '\\n')       // Escapar saltos de línea
+    .replace(/\r/g, '\\r')       // Escapar retorno de carro
+    .replace(/\t/g, '\\t');      // Escapar tabs
+}
 
 function mergeRecipes() {
   const recipesDir = './recipes-external/🌳 Forest/🕷️ Recipes';
@@ -37,13 +47,13 @@ function mergeRecipes() {
     return;
   }
   
-  // Leer todos los JSON convertidos
+  // Leer todos los JSON convertidos (SOLO recetas, no términos)
   const newRecipes = [];
   const newImports = new Map();
   
   if (fs.existsSync(recipesDir)) {
     fs.readdirSync(recipesDir)
-      .filter(file => file.endsWith('.json'))
+      .filter(file => file.endsWith('.json') && !file.endsWith('.term.json')) // ← IMPORTANTE: NO procesar .term.json
       .forEach(file => {
         try {
           const jsonContent = fs.readFileSync(path.join(recipesDir, file), 'utf8');
@@ -71,11 +81,6 @@ function mergeRecipes() {
             console.log(`✅ Found image for ${recipe.id}: ${imageName}`);
           } else {
             console.warn(`⚠️ Image not found for recipe: ${recipe.id}`);
-            if (imageName) {
-              console.warn(`   Expected: ${imageName} in ${assetsDir}`);
-            } else {
-              console.warn(`   No mapping found for ID: ${recipe.id}`);
-            }
             recipe.imageVar = null;
           }
           
@@ -112,14 +117,14 @@ function mergeRecipes() {
     return `  {
     id: "${recipe.id}",
     emoji: "${recipe.emoji || '🍽️'}",
-    title: "${recipe.title}",
-    description: "${recipe.description || ''}",
-    tags: [${tags.map(tag => `"${tag}"`).join(', ')}],
+    title: "${escapeString(recipe.title)}",
+    description: "${escapeString(recipe.description || '')}",
+    tags: [${tags.map(tag => `"${escapeString(tag)}"`).join(', ')}],
     ingredients: [
-      ${ingredients.map(ing => `"${ing.replace(/"/g, '\\"')}"`).join(',\n      ')}
+      ${ingredients.map(ing => `"${escapeString(ing)}"`).join(',\n      ')}
     ],
     steps: [
-      ${steps.map(step => `"${step.replace(/"/g, '\\"')}"`).join(',\n      ')}
+      ${steps.map(step => `"${escapeString(step)}"`).join(',\n      ')}
     ]${imageProperty}
   }`;
   }).join(',\n');
