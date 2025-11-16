@@ -30,7 +30,6 @@ function mergeRecipes() {
   }
   
   const newRecipes = [];
-  const imageImports = new Map(); // Almacenar imports de imágenes
   
   if (fs.existsSync(recipesDir)) {
     fs.readdirSync(recipesDir)
@@ -45,16 +44,12 @@ function mergeRecipes() {
           const imageName = imageMapping[recipe.id];
           
           if (imageName && fs.existsSync(`${assetsDir}/${imageName}`)) {
-            // Generar nombre de variable único para el import
-            const varName = `img${recipe.id.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('')}`;
-            const importPath = `./assets/${imageName}`;
-            
-            imageImports.set(importPath, varName);
-            recipe.imageVar = varName;
+            // Ruta relativa desde el root, Vite la transformará según el base
+            recipe.imageUrl = `/assets/${imageName}`;
             console.log(`✅ Found image for ${recipe.id}: ${imageName}`);
           } else {
             console.warn(`⚠️ Image not found for recipe: ${recipe.id}, using default`);
-            recipe.imageVar = 'defaultRecipeImage';
+            recipe.imageUrl = `/assets/default-recipe.jpg`;
           }
           
           newRecipes.push(recipe);
@@ -70,15 +65,6 @@ function mergeRecipes() {
     return;
   }
   
-  // Siempre importar la imagen por defecto
-  imageImports.set('./assets/default-recipe.jpg', 'defaultRecipeImage');
-  
-  // Generar líneas de import
-  const importLines = Array.from(imageImports.entries())
-    .map(([importPath, varName]) => `import ${varName} from '${importPath}?url';`)
-    .join('\n');
-  
-  // Generar objetos de recetas
   const recipesFormatted = newRecipes.map(recipe => {
     const ingredients = Array.isArray(recipe.ingredients) ? recipe.ingredients : [];
     const steps = Array.isArray(recipe.steps) ? recipe.steps : [];
@@ -96,7 +82,7 @@ function mergeRecipes() {
     steps: [
       ${steps.map(step => `"${escapeString(step)}"`).join(',\n      ')}
     ],
-    image: ${recipe.imageVar}
+    image: "${recipe.imageUrl}"
   }`;
   }).join(',\n');
   
@@ -111,11 +97,9 @@ function mergeRecipes() {
   image: string;
 }
 
-export const DEFAULT_RECIPE_IMAGE = defaultRecipeImage;`;
+export const DEFAULT_RECIPE_IMAGE = '/assets/default-recipe.jpg';`;
 
-  const newContent = `${importLines}
-
-${interfaceAndDefault}
+  const newContent = `${interfaceAndDefault}
 
 export const recipes: Recipe[] = [
 ${recipesFormatted}
