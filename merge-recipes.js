@@ -9,8 +9,8 @@ const imageMapping = {
   'buttercream': 'default-recipe.jpg'
 };
 
-// HARDCODEADO: El base path de GitHub Pages
-const BASE_URL = '/nerea-s-recipe-grove/';
+// HARDCODEADO: El base path de GitHub Pages CON src/assets
+const BASE_URL = '/nerea-s-recipe-grove/src/';
 
 function escapeString(str) {
   if (!str) return '';
@@ -48,14 +48,17 @@ function mergeRecipes() {
         const jsonContent = fs.readFileSync(path.join(recipesDir, file), 'utf8');
         const recipe = JSON.parse(jsonContent);
         
+        console.log(`\n📖 Processing: ${recipe.id}`);
+        
         const imageName = imageMapping[recipe.id];
+        console.log(`   Looking for: ${imageName}`);
         
         if (imageName && fs.existsSync(`${assetsDir}/${imageName}`)) {
           recipe.imageUrl = `${BASE_URL}assets/${imageName}`;
-          console.log(`✅ ${recipe.id}: ${recipe.imageUrl}`);
+          console.log(`   ✅ Found: ${recipe.imageUrl}`);
         } else {
           recipe.imageUrl = `${BASE_URL}assets/default-recipe.jpg`;
-          console.log(`⚠️ ${recipe.id}: using default → ${recipe.imageUrl}`);
+          console.log(`   ⚠️ Using default: ${recipe.imageUrl}`);
         }
         
         newRecipes.push(recipe);
@@ -110,14 +113,8 @@ export const recipes: Recipe[] = [
 ${recipesFormatted}
 ];`;
   
-  // DEBUG: Mostrar lo que se va a escribir
-  console.log('\n🔍 CONTENT TO BE WRITTEN:');
-  console.log('First 500 chars:');
-  console.log(newContent.substring(0, 500));
-  console.log('...\n');
-  
   fs.writeFileSync(recipesFile, newContent);
-  console.log(`✅ Successfully wrote recipes.ts with ${newRecipes.length} recipes\n`);
+  console.log(`\n✅ Successfully wrote recipes.ts with ${newRecipes.length} recipes\n`);
 }
 
 mergeRecipes();
