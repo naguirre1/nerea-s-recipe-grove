@@ -28,10 +28,23 @@ function convertRecipe(filePath) {
     .filter(line => line.trim().startsWith('-'))
     .map(line => line.trim().replace(/^-\s*/, ''));
   
+  // Parsear pasos: pueden ser con guiones (-) o números (1., 2., etc)
   const steps = elaborationSection
     .split('\n')
-    .filter(line => line.trim().startsWith('-'))
-    .map(line => line.trim().replace(/^-\s*/, ''));
+    .filter(line => {
+      const trimmed = line.trim();
+      // Acepta líneas que empiezan con "-" o con números seguidos de "."
+      return trimmed.startsWith('-') || /^\d+\./.test(trimmed);
+    })
+    .map(line => {
+      const trimmed = line.trim();
+      // Remover guiones al inicio
+      if (trimmed.startsWith('-')) {
+        return trimmed.replace(/^-\s*/, '');
+      }
+      // Remover números al inicio (ej: "1. " → "")
+      return trimmed.replace(/^\d+\.\s*/, '');
+    });
   
   // Extraer el nombre del archivo sin emojis
   const fileName = path.basename(filePath, '.md');
@@ -62,7 +75,7 @@ function convertRecipe(filePath) {
   
   const outputPath = filePath.replace(/\.md$/, '.json');
   fs.writeFileSync(outputPath, JSON.stringify(recipe, null, 2));
-  console.log(`✅ Converted RECIPE: ${filePath} → ID: ${recipeId}, Emoji: ${emoji}`);
+  console.log(`✅ Converted RECIPE: ${filePath} → ID: ${recipeId}, Emoji: ${emoji}, Steps: ${steps.length}`);
 }
 
 const recipesDir = process.argv[2] || './recipes-external/🌳 Forest/🕷️ Recipes';
