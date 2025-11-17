@@ -9,17 +9,25 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <nav className="container mx-auto px-4 py-4">
+      <header className="relative border-b backdrop-blur-sm sticky top-0 z-10 overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src={heroImage}
+            alt="Navigation background"
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-foreground/70 backdrop-blur-sm" />
+        </div>
+        <nav className="relative container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link to="/" className="text-2xl font-bold text-primary hover:text-primary/80 transition-colors">
+            <Link to="/" className="text-2xl font-bold text-primary-foreground hover:text-primary-foreground/80 transition-colors">
               🌳 Forest Kitchen
             </Link>
             <div className="flex gap-6">
-              <NavLink to="/" className="text-primary-foreground hover:text-primary transition-colors" activeClassName="text-primary font-semibold">
+              <NavLink to="/" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors" activeClassName="text-primary-foreground font-semibold">
                 Recipes
               </NavLink>
-              <NavLink to="/glossary" className="text-primary-foreground hover:text-primary transition-colors" activeClassName="text-primary font-semibold">
+              <NavLink to="/glossary" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors" activeClassName="text-primary-foreground font-semibold">
                 Glossary
               </NavLink>
             </div>
