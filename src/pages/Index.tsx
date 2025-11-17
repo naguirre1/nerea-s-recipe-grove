@@ -16,10 +16,10 @@ const Index = () => {
               🌳 Forest Kitchen
             </Link>
             <div className="flex gap-6">
-              <NavLink to="/" className="text-foreground hover:text-primary transition-colors" activeClassName="text-primary font-semibold">
+              <NavLink to="/" className="text-primary-foreground hover:text-primary transition-colors" activeClassName="text-primary font-semibold">
                 Recipes
               </NavLink>
-              <NavLink to="/glossary" className="text-foreground hover:text-primary transition-colors" activeClassName="text-primary font-semibold">
+              <NavLink to="/glossary" className="text-primary-foreground hover:text-primary transition-colors" activeClassName="text-primary font-semibold">
                 Glossary
               </NavLink>
             </div>
