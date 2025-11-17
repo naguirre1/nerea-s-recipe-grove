@@ -30,12 +30,9 @@ export const RecipeCard = ({ recipe }: RecipeCardProps) => {
           </div>
         </div>
         <div className="p-6">
-          <h3 className="text-2xl font-serif font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
+          <h3 className="text-2xl font-serif font-bold mb-4 text-foreground group-hover:text-primary transition-colors">
             {recipe.title}
           </h3>
-          <p className="text-muted-foreground mb-4 line-clamp-2">
-            {recipe.description}
-          </p>
           <div className="flex flex-wrap gap-2">
             {recipe.tags.slice(0, 3).map((tag) => (
               <Badge key={tag} variant="secondary" className="text-xs">
