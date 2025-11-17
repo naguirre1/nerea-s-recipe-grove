@@ -1,11 +1,20 @@
 import { Link } from "react-router-dom";
 import { RecipeCard } from "@/components/RecipeCard";
 import { recipes } from "@/data/recipes";
-import { ChefHat, Leaf, Utensils } from "lucide-react";
+import { ChefHat, Leaf, Utensils, Search } from "lucide-react";
 import heroImage from "@/assets/hero-cooking.jpg";
 import { NavLink } from "@/components/NavLink";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
 
 const Index = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredRecipes = recipes.filter((recipe) =>
+    recipe.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    recipe.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
@@ -51,15 +60,19 @@ const Index = () => {
             <ChefHat className="h-16 w-16 text-primary animate-scale-in" style={{ animationDelay: "0.1s" }} />
             <Utensils className="h-12 w-12 text-accent animate-scale-in" style={{ animationDelay: "0.2s" }} />
           </div>
-          <h1 className="text-6xl md:text-7xl font-serif font-bold mb-4 text-primary-foreground">
+          <h1 className="text-6xl md:text-7xl font-serif font-bold mb-8 text-primary-foreground">
             🌳 Forest Kitchen
           </h1>
-          <p className="text-2xl md:text-3xl text-primary-foreground/90 font-light mb-2">
-            Recetas de la huerta
-          </p>
-          <p className="text-lg text-primary-foreground/80 max-w-2xl mx-auto">
-            Descubre recetas caseras llenas de sabor y tradición
-          </p>
+          <div className="relative max-w-xl mx-auto">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
+            <Input
+              type="text"
+              placeholder="Buscar recetas..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-12 h-14 text-lg bg-background/90 backdrop-blur-sm border-border focus:border-primary"
+            />
+          </div>
         </div>
       </section>
 
@@ -73,15 +86,21 @@ const Index = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in">
-          {recipes.map((recipe, index) => (
-            <div
-              key={recipe.id}
-              style={{ animationDelay: `${index * 0.2}s` }}
-              className="animate-scale-in"
-            >
-              <RecipeCard recipe={recipe} />
+          {filteredRecipes.length === 0 ? (
+            <div className="col-span-full text-center py-16">
+              <p className="text-muted-foreground text-xl">No se encontraron recetas</p>
             </div>
-          ))}
+          ) : (
+            filteredRecipes.map((recipe, index) => (
+              <div
+                key={recipe.id}
+                style={{ animationDelay: `${index * 0.2}s` }}
+                className="animate-scale-in"
+              >
+                <RecipeCard recipe={recipe} />
+              </div>
+            ))
+          )}
         </div>
       </section>
 
