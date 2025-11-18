@@ -1,4 +1,4 @@
-import fs from 'fs';
+-import fs from 'fs';
 import path from 'path';
 
 // Mapeo explícito de IDs de recetas a nombres de imagen
@@ -93,7 +93,7 @@ function mergeRecipes() {
             console.log(`✅ Found image for ${recipe.id}: ${imageName}`);
           } else {
             console.warn(`⚠️ Image not found for recipe: ${recipe.id}`);
-            recipe.imageVar = null;
+            recipe.imageVar = 'default-image';
           }
           
           newRecipes.push(recipe);
