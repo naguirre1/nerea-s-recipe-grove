@@ -30,7 +30,7 @@ function convertTerm(filePath) {
     const linkedTitle = match[1];
     // Convert to recipe ID format
     const recipeId = linkedTitle
-      .replace(/^[\p{Emoji}]+\s*/, '')
+      .replace(/^[\p{Emoji}\u{1F300}-\u{1F9FF}]+\s*/gu, '')
       .toLowerCase()
       .replace(/\s+/g, '-')
       .replace(/[()]/g, '');
@@ -39,13 +39,13 @@ function convertTerm(filePath) {
   
   const fileName = path.basename(filePath, '.md');
   const termId = fileName
-    .replace(/^[\p{Emoji}]+\s*/, '')
+    .replace(/^[\p{Emoji}\u{1F300}-\u{1F9FF}]+\s*/gu, '')
     .toLowerCase()
     .replace(/\s+/g, '-');
   
   const term = {
     id: termId,
-    title: fileName.replace(/^[\p{Emoji}]+\s*/, ''),
+    title: fileName.replace(/^[\p{Emoji}\u{1F300}-\u{1F9FF}]+\s*/gu, ''),
     description: descriptionSection.trim(),
     tags: tags.filter(tag => tag !== 'term'),
     relatedRecipes
