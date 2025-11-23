@@ -4,11 +4,21 @@ import { recipes } from "@/data/recipes";
 import { ChefHat, Leaf, Utensils, Search } from "lucide-react";
 import heroImage from "@/assets/hero-cooking.jpg";
 import { NavLink } from "@/components/NavLink";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [showStickySearch, setShowStickySearch] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowStickySearch(window.scrollY > 300);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const filteredRecipes = recipes.filter((recipe) =>
     recipe.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -18,7 +28,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <header className="relative border-b backdrop-blur-sm sticky top-0 z-10 overflow-hidden">
+      <header className="relative border-b backdrop-blur-sm sticky top-0 z-50 overflow-hidden">
         <div className="absolute inset-0">
           <img
             src={heroImage}
@@ -42,6 +52,26 @@ const Index = () => {
             </div>
           </div>
         </nav>
+        
+        {/* Sticky Search Bar */}
+        <div
+          className={`transition-all duration-300 ease-in-out overflow-hidden ${
+            showStickySearch ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+          <div className="relative container mx-auto px-4 pb-4">
+            <div className="relative max-w-2xl mx-auto">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5 z-10" />
+              <Input
+                type="text"
+                placeholder="Buscar recetas..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-12 h-12 text-base bg-background/95 backdrop-blur-sm border-border focus:border-primary"
+              />
+            </div>
+          </div>
+        </div>
       </header>
 
       {/* Hero Section */}
