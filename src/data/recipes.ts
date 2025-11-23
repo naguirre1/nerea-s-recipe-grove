@@ -8,6 +8,7 @@ import pisto from '../assets/pisto-dish.jpg';
 import rabas from '../assets/rabas.jpg';
 import vinagreta from '../assets/vinagreta.jpg';
 import buttercream from '../assets/buttercream.jpg';
+import defaultRecipeImage from '../assets/default-recipe.jpg';
 
 export interface Recipe {
   id: string;
@@ -20,7 +21,7 @@ export interface Recipe {
   image?: string;
 }
 
-export const DEFAULT_RECIPE_IMAGE = '/src/assets/default-recipe.jpg';
+export const DEFAULT_RECIPE_IMAGE = defaultRecipeImage;
 
 export const recipes: Recipe[] = [
   {

@@ -111,7 +111,10 @@ function mergeRecipes() {
   
   // Combinar imports (existentes + nuevos)
   const allImports = new Map([...existingImports, ...newImports]);
-  
+
+  // Agregar import para la imagen por defecto
+  allImports.set('../assets/default-recipe.jpg', 'defaultRecipeImage');
+
   // Generar líneas de import
   const importLines = Array.from(allImports.entries())
     .map(([imagePath, varName]) => `import ${varName} from '${imagePath}';`)
@@ -151,7 +154,7 @@ function mergeRecipes() {
   image?: string;
 }
 
-export const DEFAULT_RECIPE_IMAGE = '/src/assets/default-recipe.jpg';`;
+export const DEFAULT_RECIPE_IMAGE = defaultRecipeImage;`;
 
   const newContent = `${importLines}
 
