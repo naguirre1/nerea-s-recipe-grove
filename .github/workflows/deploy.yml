@@ -38,8 +38,8 @@ jobs:
       - name: Convert Terms Format
         run: node convert-terms.js "./recipes-external/🌳 Forest/🕷️ Recipes"
         
-      - name: Merge Terms into terms.ts
-        run: node merge-terms.js
+      - name: Merge Terms into glossary.ts
+        run: node merge-glossary.js
 
       - name: Convert Recipe Format
         run: node convert-recipes.js "./recipes-external/🌳 Forest/🕷️ Recipes"
