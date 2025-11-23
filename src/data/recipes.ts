@@ -51,8 +51,7 @@ export const recipes: Recipe[] = [
     steps: [
       "Tostar en una sartén a fuego medio el sésamo durante 5 minutos.",
       "Batir con el aceite."
-    ],
-    image: default-image
+    ]
   },
   {
     id: "crema-de-calabaza",
