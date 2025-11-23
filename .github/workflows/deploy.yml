@@ -43,11 +43,20 @@ jobs:
 
       - name: Convert Recipe Format
         run: node convert-recipes.js "./recipes-external/🌳 Forest/🕷️ Recipes"
-        
+
+      - name: Debug - List JSON files
+        run: ls -la "./recipes-external/🌳 Forest/🕷️ Recipes"/*.json || echo "No JSON files found"
+
+      - name: Debug - Check recipes.ts before merge
+        run: grep -c "  {" src/data/recipes.ts || echo "0"
+
       - name: Merge Recipes into recipes.ts
         env:
           NODE_ENV: production
         run: node merge-recipes.js
+
+      - name: Debug - Check recipes.ts after merge
+        run: grep -c "  {" src/data/recipes.ts || echo "0"
         
       - name: Build
         run: npm run build
