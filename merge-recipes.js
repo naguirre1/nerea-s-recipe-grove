@@ -1,4 +1,4 @@
--import fs from 'fs';
+import fs from 'fs';
 import path from 'path';
 
 // Mapeo explícito de IDs de recetas a nombres de imagen
