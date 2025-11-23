@@ -47,7 +47,7 @@ const RecipeDetail = () => {
       {/* Hero Section */}
       <div className="relative h-[60vh] overflow-hidden">
         <img
-          src={recipe.image}
+          src={recipe.image || DEFAULT_RECIPE_IMAGE}
           alt={recipe.title}
           className="h-full w-full object-cover"
           onError={(e) => {
