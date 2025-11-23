@@ -93,7 +93,7 @@ function mergeRecipes() {
             console.log(`✅ Found image for ${recipe.id}: ${imageName}`);
           } else {
             console.warn(`⚠️ Image not found for recipe: ${recipe.id}`);
-            recipe.imageVar = 'default-image';
+            // Don't set imageVar - let the component use DEFAULT_RECIPE_IMAGE
           }
           
           newRecipes.push(recipe);
