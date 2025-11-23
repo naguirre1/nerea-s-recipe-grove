@@ -37,9 +37,15 @@ jobs:
 
       - name: Convert Terms Format
         run: node convert-terms.js "./recipes-external/🌳 Forest/🕷️ Recipes"
-        
+
+      - name: Debug - List term JSON files
+        run: ls -la "./recipes-external/🌳 Forest/🕷️ Recipes"/*.term.json || echo "No term JSON files found"
+
       - name: Merge Terms into glossary.ts
         run: node merge-glossary.js
+
+      - name: Debug - Check glossary.ts after merge
+        run: grep -c "id:" src/data/glossary.ts || echo "0"
 
       - name: Convert Recipe Format
         run: node convert-recipes.js "./recipes-external/🌳 Forest/🕷️ Recipes"
